@@ -9,7 +9,7 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
   const isMobile = size.width < 768
   const responsiveScale = isMobile ? 0.35 : 1.3
   const responsivePosY = isMobile ? -2.2 : -1.2
-  const responsiveIntensity = isMobile ? 0.2 : 0.8
+  const responsiveIntensity = isMobile ? 0.8 : 0.8
   
   // ✅ Handle missing model gracefully
   const { scene, isLoading, error } = useGLTF(modelPath)

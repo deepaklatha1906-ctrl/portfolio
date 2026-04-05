@@ -9,6 +9,9 @@ function SkillParticle({ skill, position, onClick, isExpanded }) {
   const meshRef = useRef()
   const [hovered, setHovered] = useState(false)
   
+  const isMobile = useThree(state => state.size.width < 768)
+  const nodeSize = isMobile ? 0.25 : 0.4
+  
   useFrame((state) => {
     if (!meshRef.current) return
     meshRef.current.position.y = position[1] + Math.sin(state.clock.elapsedTime * 2 + position[0]) * 0.1
@@ -19,7 +22,7 @@ function SkillParticle({ skill, position, onClick, isExpanded }) {
     <group position={position}>
       <mesh ref={meshRef} onClick={onClick} onPointerOver={() => setHovered(true)} onPointerOut={() => setHovered(false)}
         scale={hovered || isExpanded ? 1.3 : 1}>
-        <icosahedronGeometry args={[0.4, 1]} />
+        <icosahedronGeometry args={[nodeSize, 1]} />
         <meshStandardMaterial color={skill.color} emissive={skill.color} emissiveIntensity={hovered || isExpanded ? 0.8 : 0.3}
           metalness={0.6} roughness={0.2} transparent opacity={0.9} />
       </mesh>
@@ -49,15 +52,23 @@ function ParticleSystem({ expandedSkill, setExpandedSkill }) {
     <>
       <Sparkles count={100} scale={viewport.width * 0.8} size={1} speed={0.015} color="#00f5ff" opacity={0.3} />
       {skillsData.map((skill, index) => (
-        <SkillParticle key={skill.id} skill={skill} position={positions[index]}
-          onClick={() => setExpandedSkill(expandedSkill === skill.id ? null : skill.id)}
-          isExpanded={expandedSkill === skill.id} />
+        <motion.group 
+          key={skill.id}
+          initial={{ opacity: 0, scale: 0 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: index * 0.1 }}
+        >
+          <SkillParticle skill={skill} position={positions[index]}
+            onClick={() => setExpandedSkill(expandedSkill === skill.id ? null : skill.id)}
+            isExpanded={expandedSkill === skill.id} />
+        </motion.group>
       ))}
       <mesh position={[0, 0, 0]}>
-        <torusGeometry args={[0.8, 0.2, 16, 32]} />
+        <torusGeometry args={[isMobile ? 0.5 : 0.8, isMobile ? 0.1 : 0.2, 16, 32]} />
         <meshStandardMaterial color="#9d4edd" emissive="#9d4edd" emissiveIntensity={0.5} metalness={0.8} roughness={0.2} />
       </mesh>
-      <Text position={[0, -1.5, 0]} fontSize={0.3} color="#00f5ff" anchorX="center" anchorY="middle">
+      <Text position={[0, isMobile ? -1 : -1.5, 0]} fontSize={isMobile ? 0.2 : 0.3} color="#00f5ff" anchorX="center" anchorY="middle">
         TECHNICAL SKILLS
       </Text>
     </>
