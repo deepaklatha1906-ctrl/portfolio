@@ -30,39 +30,12 @@ function SkillParticle({ skill, position, onClick, isExpanded }) {
           {skill.name}
         </motion.div>
       </Html>
-      <AnimatePresence>
-        {isExpanded && (
-          <Html distanceFactor={8}>
-            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              className="absolute top-8 left-1/2 -translate-x-1/2 w-[calc(100vw-3rem)] max-w-xs p-4 bg-cyber-surface/95 border border-neon-purple rounded-lg backdrop-blur-sm z-50"
-              style={{ boxShadow: '0 0 30px rgba(157, 78, 221, 0.5)' }} onClick={(e) => e.stopPropagation()}>
-              <h4 className="font-display font-bold text-neon-purple mb-2">{skill.name}</h4>
-              <div className="mb-3">
-                <div className="flex justify-between text-xs mb-1">
-                  <span className="font-mono">Proficiency</span>
-                  <span className="font-mono text-neon-cyan">{skill.proficiency}%</span>
-                </div>
-                <div className="h-2 bg-cyber-border rounded-full overflow-hidden">
-                  <motion.div className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple"
-                    initial={{ width: 0 }} animate={{ width: `${skill.proficiency}%` }} transition={{ duration: 0.8, ease: "easeOut" }} />
-                </div>
-              </div>
-              <p className="font-mono text-xs text-gray-300 leading-relaxed">{skill.description}</p>
-              <button onClick={(e) => { e.stopPropagation(); onClick() }}
-                className="mt-3 w-full py-1 text-xs font-mono bg-neon-purple/20 border border-neon-purple/50 rounded hover:bg-neon-purple/30 transition-colors">
-                [CLOSE]
-              </button>
-            </motion.div>
-          </Html>
-        )}
-      </AnimatePresence>
     </group>
   )
 }
 
-function ParticleSystem() {
-  const { viewport } = useThree()
-  const [expandedSkill, setExpandedSkill] = useState(null)
+function ParticleSystem({ expandedSkill, setExpandedSkill }) {
+  const { viewport, size } = useThree()
   
   const positions = useMemo(() => {
     return skillsData.map((_, index) => {
@@ -92,14 +65,67 @@ function ParticleSystem() {
 }
 
 export default function ParticleHub() {
+  const [expandedSkillId, setExpandedSkillId] = useState(null)
+  const expandedSkill = skillsData.find(s => s.id === expandedSkillId)
+
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full relative">
       <Canvas camera={{ position: [0, 0, 8], fov: 50 }}>
         <ambientLight intensity={0.3} />
         <pointLight position={[10, 10, 10]} intensity={0.8} color="#00f5ff" />
         <pointLight position={[-10, -10, -10]} intensity={0.5} color="#9d4edd" />
-        <ParticleSystem />
+        <ParticleSystem expandedSkill={expandedSkillId} setExpandedSkill={setExpandedSkillId} />
       </Canvas>
+
+      <AnimatePresence>
+        {expandedSkill && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="w-full max-w-sm p-6 bg-cyber-surface/95 border border-neon-purple rounded-xl backdrop-blur-md pointer-events-auto shadow-neon-double"
+              style={{ boxShadow: '0 0 30px rgba(157, 78, 221, 0.4)' }}
+            >
+              <div className="flex justify-between items-start mb-4">
+                <h4 className="font-display font-bold text-xl text-neon-purple">{expandedSkill.name}</h4>
+                <button 
+                  onClick={() => setExpandedSkillId(null)}
+                  className="text-white hover:text-neon-cyan transition-colors text-xl"
+                >
+                  ✕
+                </button>
+              </div>
+              
+              <div className="mb-6">
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-mono text-gray-400">Mastery Level</span>
+                  <span className="font-mono text-neon-cyan">{expandedSkill.proficiency}%</span>
+                </div>
+                <div className="h-3 bg-cyber-border rounded-full overflow-hidden border border-neon-cyan/20">
+                  <motion.div 
+                    className="h-full bg-gradient-to-r from-neon-cyan to-neon-purple"
+                    initial={{ width: 0 }} 
+                    animate={{ width: `${expandedSkill.proficiency}%` }} 
+                    transition={{ duration: 1, ease: "easeOut" }} 
+                  />
+                </div>
+              </div>
+              
+              <p className="font-mono text-sm text-gray-300 leading-relaxed overflow-y-auto max-h-48 mb-4">
+                {expandedSkill.description}
+              </p>
+              
+              <button 
+                onClick={() => setExpandedSkillId(null)}
+                className="w-full py-2 font-mono text-sm bg-neon-purple/20 border border-neon-purple/50 rounded hover:bg-neon-purple/30 transition-all duration-300 text-neon-purple-light"
+              >
+                [ CLOSE_LOGS ]
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 font-mono text-xs text-neon-cyan/70 text-center pointer-events-none">
         <p>Click any node to view details • Drag to rotate view</p>
       </div>
