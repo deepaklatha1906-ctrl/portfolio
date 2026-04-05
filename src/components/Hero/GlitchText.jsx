@@ -40,7 +40,7 @@ export default function GlitchText({ name, title }) {
             whileHover={{ x: 10 }}
         >
             <a 
-                href="/Deepak_A_Resume.png" 
+                href="./Deepak_A_Resume.png" 
                 download="Deepak_A_Resume.png"
                 className="flex items-center gap-2 px-4 py-2 bg-neon-cyan/10 border border-neon-cyan/50 hover:bg-neon-cyan/20 rounded-sm transition-all duration-300"
             >
