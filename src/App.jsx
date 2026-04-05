@@ -27,11 +27,6 @@ function Hero3DElements() {
 
 function App() {
   const containerRef = useRef()
-  const { scrollYProgress } = useScroll()
-  
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
-  const officeOpacity = useTransform(scrollYProgress, [0.2, 0.4, 0.6, 0.8], [0, 1, 1, 0])
-  const skillsOpacity = useTransform(scrollYProgress, [0.6, 0.8, 1], [0, 1, 1])
 
   useEffect(() => {
     document.body.style.background = 'linear-gradient(135deg, #0a0a12 0%, #121220 50%, #0a0a12 100%)'
@@ -59,25 +54,33 @@ function App() {
         <Loader />
       </div>
 
-      {/* ✅ UI Content Layers (no R3F hooks here) */}
+      {/* ✅ UI Content Layers (Reveal Animations) */}
       <motion.section 
-        style={{ opacity: heroOpacity }}
-        className="relative z-10 min-h-screen flex items-center justify-center"
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.3 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="relative z-10 min-h-screen flex items-center justify-center py-20"
       >
-        {/* Hero now only has 2D UI - no 3D component */}
         <Hero2D />
       </motion.section>
 
       <motion.section 
-        style={{ opacity: officeOpacity }}
-        className="relative z-10 min-h-screen py-20"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 min-h-screen py-20 px-4"
       >
         <DigitalOffice />
       </motion.section>
 
       <motion.section 
-        style={{ opacity: skillsOpacity }}
-        className="relative z-10 min-h-screen py-20 mb-20"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+        className="relative z-10 min-h-screen py-20 mb-20 px-4"
       >
         <ParticleHub />
       </motion.section>

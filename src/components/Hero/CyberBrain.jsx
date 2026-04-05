@@ -7,9 +7,9 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
   const robotRef = useRef()
   const { mouse, viewport, size } = useThree()
   const isMobile = size.width < 768
-  const responsiveScale = isMobile ? 0.6 : 1.3
-  const responsivePosY = isMobile ? -1.8 : -1.2
-  const responsiveIntensity = isMobile ? 0.4 : 0.8
+  const responsiveScale = isMobile ? 0.35 : 1.3
+  const responsivePosY = isMobile ? -2.2 : -1.2
+  const responsiveIntensity = isMobile ? 0.2 : 0.8
   
   // ✅ Handle missing model gracefully
   const { scene, isLoading, error } = useGLTF(modelPath)
