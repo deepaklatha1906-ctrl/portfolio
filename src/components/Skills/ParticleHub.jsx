@@ -56,9 +56,8 @@ function ParticleSystem({ expandedSkill, setExpandedSkill }) {
         <motion.group 
           key={skill.id}
           initial={{ opacity: 0, scale: 0 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: index * 0.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: index * 0.1, ease: "easeOut" }}
         >
           <SkillParticle skill={skill} position={positions[index]}
             onClick={() => setExpandedSkill(expandedSkill === skill.id ? null : skill.id)}
