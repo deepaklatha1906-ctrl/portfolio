@@ -6,6 +6,10 @@ import * as THREE from 'three'
 export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' }) {
   const robotRef = useRef()
   const { mouse, viewport, size } = useThree()
+  const isMobile = size.width < 768
+  const responsiveScale = isMobile ? 0.6 : 1.3
+  const responsivePosY = isMobile ? -1.8 : -1.2
+  const responsiveIntensity = isMobile ? 0.4 : 0.8
   
   // ✅ Handle missing model gracefully
   const { scene, isLoading, error } = useGLTF(modelPath)
@@ -17,7 +21,7 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
         if (child.isMesh && child.material) {
           child.material = child.material.clone()
           child.material.emissive = new THREE.Color('#0066ff')
-          child.material.emissiveIntensity = 0.8
+          child.material.emissiveIntensity = responsiveIntensity
           child.material.metalness = 0.9
           child.material.roughness = 0.2
         }
@@ -68,7 +72,7 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
   }
 
   return (
-    <group ref={robotRef} position={[0, -1.2, 0]} scale={1.3}>
+    <group ref={robotRef} position={[0, responsivePosY, 0]} scale={responsiveScale}>
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
         <primitive object={scene} />
         <Sparkles count={80} scale={4} size={3} speed={0.02} color="#00f5ff" opacity={0.5} />
@@ -81,16 +85,11 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
 function ProceduralBrain() {
   const groupRef = useRef()
   
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime()
-    if (groupRef.current) {
-      groupRef.current.rotation.y = t * 0.1
-      groupRef.current.scale.setScalar(1 + Math.sin(t * 0.5) * 0.03)
-    }
-  })
-
+  const isMobile = useThree(state => state.size.width < 768)
+  const responsivePosY = isMobile ? -0.8 : -1.2
+  
   return (
-    <group ref={groupRef} position={[0, -1.2, 0]}>
+    <group ref={groupRef} position={[0, responsivePosY, 0]}>
       <Float speed={2} rotationIntensity={0.1} floatIntensity={0.2}>
         {/* Core sphere */}
         <mesh>

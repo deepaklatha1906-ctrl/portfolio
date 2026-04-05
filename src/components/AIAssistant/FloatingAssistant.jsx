@@ -47,7 +47,7 @@ export default function FloatingAssistant() {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-24 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center shadow-neon-double"
+        className="fixed bottom-32 md:bottom-24 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-neon-cyan to-neon-purple flex items-center justify-center shadow-neon-double"
         style={{ boxShadow: '0 0 20px #00f5ff, 0 0 40px #9d4edd' }}
       >
         <span className="text-2xl">🤖</span>
@@ -59,7 +59,7 @@ export default function FloatingAssistant() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 right-6 z-40 w-80 md:w-96 bg-cyber-surface/95 border border-neon-cyan/30 rounded-xl backdrop-blur-sm overflow-hidden"
+            className="fixed bottom-32 md:bottom-24 right-6 z-40 w-80 md:w-96 bg-cyber-surface/95 border border-neon-cyan/30 rounded-xl backdrop-blur-sm overflow-hidden"
             style={{ boxShadow: '0 0 30px rgba(0, 245, 255, 0.3)' }}
           >
             <div className="p-3 border-b border-neon-cyan/20 flex items-center justify-between bg-cyber-bg/50">
