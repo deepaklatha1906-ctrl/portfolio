@@ -1,0 +1,1 @@
+Place your cyber-brain.glb model here. Download from: https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Xbot.glb
