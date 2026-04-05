@@ -3,7 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { useGLTF, Float, Sparkles, Html } from '@react-three/drei'
 import * as THREE from 'three'
 
-export default function CyberBrain({ modelPath = './cyber-brain.glb' }) {
+export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' }) {
   const robotRef = useRef()
   const { mouse, viewport, size } = useThree()
   
@@ -125,7 +125,7 @@ function ProceduralBrain() {
 
 // Preload (won't crash if file missing)
 try {
-  useGLTF.preload('./cyber-brain.glb')
+  useGLTF.preload('/portfolio/cyber-brain.glb')
 } catch (e) {
   // Silent fail - procedural fallback will handle
 }
