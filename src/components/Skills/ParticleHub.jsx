@@ -39,6 +39,7 @@ function SkillParticle({ skill, position, onClick, isExpanded }) {
 
 function ParticleSystem({ expandedSkill, setExpandedSkill }) {
   const { viewport, size } = useThree()
+  const isMobile = size.width < 768
   
   const positions = useMemo(() => {
     return skillsData.map((_, index) => {
