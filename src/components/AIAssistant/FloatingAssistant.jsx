@@ -1,13 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { TypeAnimation } from 'react-type-animation'
+import { fetchGithubData } from '../../utils/githubApi'
 
 export default function FloatingAssistant() {
   const [isOpen, setIsOpen] = useState(false)
+  const [githubData, setGithubData] = useState(null)
   const [messages, setMessages] = useState([
     { role: 'assistant', text: "Hi! I'm Deepak's AI Assistant. Ask me about his projects, skills, or experience!" }
   ])
   const [input, setInput] = useState('')
+
+  useEffect(() => {
+    async function loadData() {
+      const data = await fetchGithubData()
+      if (data) setGithubData(data)
+    }
+    loadData()
+  }, [])
 
   const handleSend = () => {
     if (!input.trim()) return
@@ -16,20 +26,23 @@ export default function FloatingAssistant() {
     setInput('')
     
     setTimeout(() => {
+      const topProjects = githubData?.projects.slice(0, 3).map(p => p.title).join(', ') || 'College Chatbot, Crime Analysis'
+      const topSkills = githubData?.skills.slice(0, 4).map(s => s.name).join(', ') || 'Python, ML, SQL'
+
       const responses = {
-        'chatbot': "The College Chatbot uses NLP with TensorFlow to understand student queries. It handles 50+ intent categories!",
-        'skills': "Deepak specializes in Python, Machine Learning, SQL, and Data Visualization. Proficiency levels range from 85-95%!",
+        'projects': `Deepak has ${githubData?.projects.length || 5}+ active projects on GitHub. Some notable ones include ${topProjects}. Would you like details on any of these?`,
+        'skills': `Deepak's top technical skills are ${topSkills}. His proficiency is automatically calculated based on his live GitHub contributions!`,
         'education': "B.Tech in AI & Data Science from Anna University. Focus on practical ML applications and data-driven solutions.",
         'contact': "You can reach Deepak at deepaklatha1906@gmail.com or via LinkedIn!",
-        'default': "I can tell you about Deepak's projects (chatbot, crime analysis, voice assistant), skills, or education. What would you like to know?"
+        'default': "I can tell you about Deepak's live GitHub projects, his top skills, or his education. What would you like to know?"
       }
       
       const lowerInput = input.toLowerCase()
       let response = responses.default
       
-      if (lowerInput.includes('chatbot') || lowerInput.includes('telegram')) {
-        response = responses.chatbot
-      } else if (lowerInput.includes('skill') || lowerInput.includes('python') || lowerInput.includes('ml')) {
+      if (lowerInput.includes('project') || lowerInput.includes('work') || lowerInput.includes('repo')) {
+        response = responses.projects
+      } else if (lowerInput.includes('skill') || lowerInput.includes('tech') || lowerInput.includes('language')) {
         response = responses.skills
       } else if (lowerInput.includes('education') || lowerInput.includes('university') || lowerInput.includes('degree')) {
         response = responses.education

@@ -9,7 +9,7 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
   const isMobile = size.width < 768
   const responsiveScale = isMobile ? 0.35 : 1.3
   const responsivePosY = isMobile ? -2.2 : -1.2
-  const responsiveIntensity = isMobile ? 0.8 : 0.8
+  const responsiveIntensity = isMobile ? 1.5 : 0.8 // Boosted for mobile
   
   // ✅ Handle missing model gracefully
   const { scene, isLoading, error } = useGLTF(modelPath)
@@ -20,10 +20,22 @@ export default function CyberBrain({ modelPath = '/portfolio/cyber-brain.glb' })
       scene.traverse((child) => {
         if (child.isMesh && child.material) {
           child.material = child.material.clone()
-          child.material.emissive = new THREE.Color('#0066ff')
-          child.material.emissiveIntensity = responsiveIntensity
-          child.material.metalness = 0.9
-          child.material.roughness = 0.2
+          
+          if (isMobile) {
+            // Forcefully basic material (no lighting calculation) to guarantee color on all mobile GPUs
+            const basicMaterial = new THREE.MeshBasicMaterial({
+              color: new THREE.Color('#00f5ff'),
+              transparent: true,
+              opacity: 0.9
+            })
+            child.material = basicMaterial
+          } else {
+            child.material.color = new THREE.Color('#00f5ff')
+            child.material.emissive = new THREE.Color('#0066ff')
+            child.material.emissiveIntensity = responsiveIntensity * 2
+            child.material.metalness = 0.2
+            child.material.roughness = 0.1
+          }
         }
       })
     }
@@ -94,13 +106,17 @@ function ProceduralBrain() {
         {/* Core sphere */}
         <mesh>
           <icosahedronGeometry args={[1.2, 2]} />
-          <meshStandardMaterial 
-            color="#00f5ff" 
-            emissive="#0066ff"
-            emissiveIntensity={1}
-            metalness={0.9}
-            roughness={0.1}
-          />
+          {isMobile ? (
+            <meshBasicMaterial color="#00f5ff" transparent opacity={0.8} />
+          ) : (
+            <meshStandardMaterial 
+              color="#00f5ff" 
+              emissive="#0066ff"
+              emissiveIntensity={2.0}
+              metalness={0.9}
+              roughness={0.1}
+            />
+          )}
         </mesh>
         
         {/* Wireframe neural network */}

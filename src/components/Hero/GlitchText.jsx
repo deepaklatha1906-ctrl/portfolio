@@ -27,7 +27,7 @@ export default function GlitchText({ name, title }) {
         transition={{ delay: 0.5, duration: 0.8 }}
         className="mt-4"
       >
-        <p className="font-mono text-neon-cyan/80 text-lg md:text-xl">
+        <p className="font-mono text-neon-cyan/80 text-base md:text-xl leading-relaxed">
           {'>'} <span className="text-white">{title}</span>
         </p>
         
@@ -66,11 +66,9 @@ export default function GlitchText({ name, title }) {
             transition={{ delay: 1.2, duration: 0.5 }}
         >
             <a 
-                href={`https://mail.google.com/mail/?view=cm&fs=1&to=${contactInfo.email}`}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={`mailto:${contactInfo.email}`}
                 className="p-2.5 md:p-3 bg-neon-cyan/5 border border-neon-cyan/30 hover:bg-neon-cyan/20 hover:border-neon-cyan text-neon-cyan/60 hover:text-neon-cyan transition-all duration-300 group"
-                title="Email (Gmail)"
+                title="Send me an email"
             >
                 <svg className="w-6 h-6 md:w-7 md:h-7 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />

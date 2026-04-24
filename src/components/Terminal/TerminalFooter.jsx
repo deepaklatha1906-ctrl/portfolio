@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 import Typewriter from './Typewriter'
 import { careerObjective, contactInfo, detailedBio, philosophy, goal } from '../../utils/resumeData'
+import { fetchGithubData } from '../../utils/githubApi'
 
 export default function TerminalFooter() {
   const outputEndRef = useRef(null)
@@ -11,6 +12,15 @@ export default function TerminalFooter() {
   const [terminalInput, setTerminalInput] = useState('')
   const [terminalOutput, setTerminalOutput] = useState([])
   const [isAtBottom, setIsAtBottom] = useState(true)
+  const [githubData, setGithubData] = useState(null)
+
+  useEffect(() => {
+    async function loadData() {
+      const data = await fetchGithubData()
+      if (data) setGithubData(data)
+    }
+    loadData()
+  }, [])
 
   const handleScroll = () => {
     const container = containerRef.current
@@ -72,7 +82,10 @@ export default function TerminalFooter() {
       } else if (command === 'clear') {
         setTerminalOutput([])
       } else if (command === 'projects') {
-        setTerminalOutput(prev => [...prev, { type: 'output', text: `Featured Projects:\n1. College Chatbot - AI NLP Telegram Bot\n2. Crime Data Analysis - Predictive Analytics\n3. Voice Assistant - Speech Recognition System` }])
+        const projectList = githubData 
+          ? `Live GitHub Projects:\n${githubData.projects.map((p, i) => `${i + 1}. ${p.title} - ${p.techStack.join(', ')}`).join('\n')}`
+          : `Featured Projects:\n1. College Chatbot - AI NLP Telegram Bot\n2. Crime Data Analysis - Predictive Analytics\n3. Voice Assistant - Speech Recognition System`
+        setTerminalOutput(prev => [...prev, { type: 'output', text: projectList }])
       } else {
         setTerminalOutput(prev => [...prev, { type: 'error', text: `Command not found: '${command}'. Type 'help' for available commands.` }])
       }

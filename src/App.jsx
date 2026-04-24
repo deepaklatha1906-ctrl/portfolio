@@ -7,9 +7,10 @@ import ParticleHub from './components/Skills/ParticleHub'
 import TerminalFooter from './components/Terminal/TerminalFooter'
 import FloatingAssistant from './components/AIAssistant/FloatingAssistant'
 import { useEffect, useRef, Suspense } from 'react'
-import { Loader } from '@react-three/drei'
+import { Loader, Environment } from '@react-three/drei'
 import CyberBrain from './components/Hero/CyberBrain'
 import GlitchText from './components/Hero/GlitchText'
+import Navbar from './components/Navbar'
 
 // ✅ CyberBrain component NOW inside Canvas
 function CyberBrainWrapper() {
@@ -34,16 +35,19 @@ function App() {
 
   return (
     <div ref={containerRef} className="relative min-h-screen">
+      <Navbar />
       
       {/* ✅ 3D Canvas Layer - NOW includes CyberBrain */}
       <div className="fixed inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 0, 5], fov: 50 }} dpr={[1, 2]}>
-          <ambientLight intensity={0.3} />
-          <pointLight position={[10, 10, 10]} intensity={0.8} color="#00f5ff" />
-          <pointLight position={[-10, -10, -10]} intensity={0.5} color="#9d4edd" />
+          <ambientLight intensity={window.innerWidth < 768 ? 1.0 : 0.3} />
+          <pointLight position={[10, 10, 10]} intensity={1.2} color="#00f5ff" />
+          <pointLight position={[-10, -10, -10]} intensity={0.8} color="#9d4edd" />
           
           {/* ✅ CyberBrain rendered INSIDE Canvas */}
           <CyberBrainWrapper />
+          
+          <Environment preset="city" />
           
           <EffectComposer disableNormalPass>
             <Bloom luminanceThreshold={0.5} intensity={1.5} mipmapBlur />
@@ -56,37 +60,43 @@ function App() {
 
       {/* ✅ UI Content Layers (Reveal Animations) */}
       <motion.section 
+        id="home"
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.3 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="relative z-10 min-h-screen flex items-center justify-center py-20"
+        className="relative z-10 min-h-[100dvh] flex items-center justify-center py-20 scroll-mt-20"
       >
         <Hero2D />
       </motion.section>
 
       <motion.section 
+        id="projects"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 min-h-screen py-20 px-4"
+        className="relative z-10 min-h-[100dvh] py-20 px-4 scroll-mt-20"
       >
         <DigitalOffice />
       </motion.section>
 
       <motion.section 
+        id="skills"
         initial={{ opacity: 0, y: 50 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 1, ease: "easeOut" }}
-        className="relative z-10 min-h-screen py-20 mb-20 px-4"
+        className="relative z-10 min-h-[100dvh] py-20 mb-20 px-4 scroll-mt-20"
       >
         <ParticleHub />
       </motion.section>
 
-      <FloatingAssistant />
-      <TerminalFooter />
+      <div id="about" className="scroll-mt-20">
+
+        <FloatingAssistant />
+        <TerminalFooter />
+      </div>
     </div>
   )
 }
@@ -99,6 +109,7 @@ function Hero2D() {
       <GlitchText name="Deepak A" title="AI & Data Science Student" />
       
       {/* Scroll indicator - Repositioned to be below the resume button */}
+
       <motion.div 
         className="absolute -bottom-32 left-1/2 -translate-x-1/2 md:-bottom-48"
         animate={{ y: [0, 10, 0] }}
@@ -112,4 +123,4 @@ function Hero2D() {
   )
 }
 
-export default App
+export default App

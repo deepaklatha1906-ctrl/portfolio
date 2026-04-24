@@ -1,11 +1,25 @@
 import { motion, useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import HolographicPanel from './HolographicPanel'
-import { projectsData } from '../../utils/resumeData'
+import { projectsData as staticProjects } from '../../utils/resumeData'
+import { fetchGithubData } from '../../utils/githubApi'
 
 export default function DigitalOffice() {
   const sectionRef = useRef(null)
   const isInView = useInView(sectionRef, { once: false, amount: 0.2 })
+  const [projects, setProjects] = useState(staticProjects)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function loadData() {
+      const data = await fetchGithubData()
+      if (data && data.projects.length > 0) {
+        setProjects(data.projects)
+      }
+      setLoading(false)
+    }
+    loadData()
+  }, [])
 
   return (
     <section ref={sectionRef} className="relative py-20 px-4">
@@ -20,11 +34,11 @@ export default function DigitalOffice() {
             <span className="text-neon-cyan">PROJECTS</span>
             <span className="text-neon-purple">_HUB</span>
           </h2>
-          <p className="font-mono text-cyber-border">// Interactive holographic interface displaying my work</p>
+          <p className="font-mono text-cyber-border">// {loading ? 'Syncing with GitHub...' : 'Interactive holographic interface displaying my live GitHub work'}</p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projectsData.map((project, index) => (
+          {projects.map((project, index) => (
             <motion.div
               key={project.id}
               initial={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -41,4 +55,4 @@ export default function DigitalOffice() {
       </div>
     </section>
   )
-}
+}

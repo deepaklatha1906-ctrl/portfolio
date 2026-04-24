@@ -28,18 +28,7 @@ export default function HolographicPanel({ project }) {
             <span key={i} className="px-2 py-1 text-xs font-mono bg-neon-cyan/10 border border-neon-cyan/30 rounded text-neon-cyan">{tech}</span>
           ))}
         </div>
-        {project.visualizationData && (
-          <div className="h-32">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData}>
-                <XAxis dataKey="name" hide />
-                <YAxis hide />
-                <Tooltip contentStyle={{ backgroundColor: '#121220', border: '1px solid #00f5ff', borderRadius: '4px' }} />
-                <Bar dataKey="value" fill="#00f5ff" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        )}
+
         <div className="flex gap-2 pt-2">
           {project.github && (
             <motion.a 
